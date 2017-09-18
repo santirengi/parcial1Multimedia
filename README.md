@@ -1,4 +1,4 @@
-# parcial1Multimedia
+# parcial1Multimedia Santiago Rengifo Norbey Gallego
 
 Profe dado a que no pudimos correr ni entender muy bien los ejemplos, decidimos realizar el parcial desde 0,usando el tutorial de docker y partes que entendiamos de los ejemplos, por esto y por el tiempo, pudimos hacer y no hacer algunas de las cosas requeridas:
 
