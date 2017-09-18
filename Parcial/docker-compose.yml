@@ -1,0 +1,88 @@
+version: "3"
+services:
+  rdb:                                             #parent image rethinkDB
+    image: rethinkdb
+    ports:
+      - "9090:8080"
+      - "28015:28015"
+      - "29015:29015"
+    volumes:
+      - ./nodes/rdb/data:/data                      #storage for db
+
+  ui:                                            #appi rest: conects ui with links and metric
+    build: nodes/ui/
+    ports:
+      - "80:80"
+
+  links:
+    build: nodes/links/
+    ports:
+      - 80
+    links:
+      - rdb
+
+  metric:                                           #counter for views
+    build: nodes/metric/
+    ports:
+      - 80
+    links:
+      - rdb
+
+#prueba balanceador de carga
+#  prueba:
+#    build: nodes/prueba/
+#    expose:
+#      - 80
+
+  api:                                            #appi rest: conects ui with links and metric
+    build: nodes/api/
+    ports:
+      - 80
+
+  lblinks:                                             #load balancer HAproxy
+    image: dockercloud/haproxy
+    ports:
+      - "6000:80"
+    links:
+      - links
+      #- prueba
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock   
+
+  lbmetric:                                             #load balancer HAproxy
+    image: dockercloud/haproxy
+    ports:
+      - "5000:80"
+    links:
+      - metric
+      #- prueba
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  lbapi:                                             #load balancer HAproxy
+    image: dockercloud/haproxy
+    ports:
+      - "4000:80"
+    links:
+      - api
+      #- prueba
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock    
+
+  #web:
+    # replace username/repo:tag with your name and image details
+  #  image: santirengi/get-started:part1     #imagen del repositorio
+  #  deploy:
+  #    replicas: 5     #Corre 5 instancias de un servicio llamado "web"
+  #    resources:
+  #      limits:
+  #        cpus: "0.1"       #usar 10%cpu
+  #        memory: 50M       #usar 50Mb de ram
+  #    restart_policy:
+  #      condition: on-failure     #reinicial el contenedor si alguno falla
+  #  ports:
+  #    - "80:80"                 #mapear el puerto simulado 80 al 80 real
+  #  networks:
+  #    - webnet                  #balanceador de carga llamado webnet
+#networks:
+#  webnet:

@@ -1,0 +1,16 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "ui",
+  "author": "Santiago Rengifo y Norbey Gallego",
+  "main": "ui.js",
+  "scripts": {
+    "start": "node ui.js"
+  },
+
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "request-json": "^0.6.2"
+  }
+}
